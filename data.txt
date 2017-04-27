@@ -1,0 +1,7 @@
+in menu :
+	menu_background 1280*720
+	menu_title	732*176
+	menu_play	134*37
+	menu_option	98*37
+	menu_stuff	72*37
+

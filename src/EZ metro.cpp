@@ -66,7 +66,7 @@ int play_menu() {
 
 	freopen("menu.in", "r", stdin);
 
-	int menu_case;
+	int menu_case = 0;
 	scanf("%d", &menu_case);
 
 	SDL_Surface * 	menu_pic[menu_case];
@@ -120,14 +120,14 @@ int play_menu() {
 	//WE NEED¡@ANIMATION HERE~~~~~~~~~~~~~~~~~
 
 	// menu clean up
-	for(int i = 0; i < menu_case; i++) {
-		SDL_FreeSurface(menu_pic[i]);
-	}
-
+	//for(int i = 0; i < menu_case; i++) {
+	//	SDL_FreeSurface(menu_pic[i]);
+	//}
+	fclose(stdin);
 	return type;
 }
 
-int stuff_play() {
+int play_stuff() {
 	int type = 3;
 
 	// write something here
@@ -135,9 +135,39 @@ int stuff_play() {
 	return type;
 }
 
-int game_play() {
+int play_game() {
 	int type = 1;
 
+	freopen("play.in", "r", stdin);
+
+	int game_case = 0;
+	scanf("%d", &game_case);
+
+	if(game_case == 0) {
+		SDL_WM_SetCaption("No", NULL);
+		SDL_Delay(1000);
+	}
+
+	SDL_Surface * game_pic[game_case];
+	SDL_Rect game_clip[game_case];
+
+	for(int i = 0; i < game_case; i++) {
+			game_pic[i] = NULL;
+
+			int x, y, px, py;
+			char whichfile[100];
+			scanf("%s%d%d%d%d", &whichfile, &x, &y, &px, &py);
+
+			game_pic[i] = loadimage(whichfile);
+
+			// set clip of menu
+			game_clip[i].x = px;
+			game_clip[i].y = py;
+			game_clip[i].w = x;
+			game_clip[i].h = y;
+
+			apply_surface(px, py, game_pic[i], screen);
+		}
 	return type;
 }
 
@@ -166,19 +196,18 @@ int main(int argc, char * argv[]) {
 				type = play_menu();
 				break;
 			case 1:
-				SDL_Delay(1000);
 				SDL_WM_SetCaption("i got play pressed", NULL);
 				SDL_Flip(screen);
-				type = game_play();
+				type = play_game();
 				break;
 			case 2:
-				SDL_Delay(1000);
 				SDL_WM_SetCaption("i got option pressed", NULL);
+				SDL_Flip(screen);
 				break;
 			case 3:
 				SDL_Delay(1000);
 				SDL_WM_SetCaption("i got stuff pressed", NULL);
-				type = stuff_play();
+				type = play_stuff();
 				break;
 		}
 	}

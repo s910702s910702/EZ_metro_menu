@@ -7,7 +7,7 @@
 
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
-#define SCREEN_BPP  24
+#define SCREEN_FPS  60
 
 
 using namespace std;
@@ -76,6 +76,7 @@ int play_menu() {
 		menu_pic[i] = NULL;
 
 		int x, y, px, py;
+
 		char whichfile[100];
 		scanf("%s%d%d%d%d", &whichfile, &x, &y, &px, &py);
 
@@ -92,42 +93,32 @@ int play_menu() {
 
 	int x, y;
 
-	while(SDL_PollEvent(&event) && type == 0) {
+	while(event.type != SDL_QUIT && SDL_PollEvent(&event)) {
 
 		if(event.type == SDL_QUIT) break;
-
 		else if(event.type == SDL_MOUSEBUTTONDOWN) {
 			if(event.button.button == SDL_BUTTON_LEFT) {
 				x = event.button.x;
 				y = event.button.y;
 
 				// select which type should change
-				for(int i = 2; i < 5; i++) {
-					if(x >= menu_clip[i].x && x <= menu_clip[i].x + menu_clip[i].w && y >= menu_clip[i].y && y <= menu_clip[i].y + menu_clip[i].h) {
-						//if(i == 2) SDL_WM_SetCaption("play pressed", NULL);
-						//else if(i == 3) SDL_WM_SetCaption("option pressed", NULL);
-						//else if(i == 4) SDL_WM_SetCaption("stuff pressed", NULL);
-						type = i - 1;
-					}
-				}
+				for(int i = 2; i < 5; i++)
+					if(x >= menu_clip[i].x && x <= menu_clip[i].x + menu_clip[i].w && y >= menu_clip[i].y && y <= menu_clip[i].y + menu_clip[i].h) type = i - 1;
 			}
 		}
 		SDL_Flip(screen);
 
-		SDL_Delay(10);
 	}
-
-	//WE NEED¡@ANIMATION HERE~~~~~~~~~~~~~~~~~
+	SDL_Delay(1000 / SCREEN_FPS + 10);
+	// WE NEED¡@ANIMATION HERE~~~~~~~~~~~~~~~~~
 
 	// menu clean up
-	//for(int i = 0; i < menu_case; i++) {
-	//	SDL_FreeSurface(menu_pic[i]);
-	//}
+	for(int i = 0; i < menu_case; i++) SDL_FreeSurface(menu_pic[i]);
 	fclose(stdin);
 	return type;
 }
 
-int play_stuff() {
+int play_staff() {
 	int type = 3;
 
 	// write something here
@@ -168,6 +159,26 @@ int play_game() {
 
 			apply_surface(px, py, game_pic[i], screen);
 		}
+
+	while(SDL_PollEvent(&event) && type == 0) {
+
+		if(event.type == SDL_QUIT) break;
+
+
+		else if(event.type == SDL_MOUSEBUTTONDOWN) {
+			if(event.button.button == SDL_BUTTON_LEFT) {
+
+			}
+		}
+		SDL_Flip(screen);
+
+		SDL_Delay(1000 / SCREEN_FPS);
+	}
+
+	for(int i = 0; i < game_case; i++) {
+		SDL_FreeSurface(game_pic[i]);
+	}
+
 	return type;
 }
 
@@ -179,14 +190,10 @@ int main(int argc, char * argv[]) {
 	init();
 
 
-	// load menu data
-
-
-
 	//if(SDL_Flip(screen) == -1) return 1;
 
 
-	while(quit == false) {
+	while(quit == false && event.type != SDL_QUIT) {
 		if(SDL_PollEvent(&event)) {
 			if(event.type == SDL_QUIT) quit = true;
 		}
@@ -206,8 +213,8 @@ int main(int argc, char * argv[]) {
 				break;
 			case 3:
 				SDL_Delay(1000);
-				SDL_WM_SetCaption("i got stuff pressed", NULL);
-				type = play_stuff();
+				SDL_WM_SetCaption("i got staff pressed", NULL);
+				type = play_staff();
 				break;
 		}
 	}

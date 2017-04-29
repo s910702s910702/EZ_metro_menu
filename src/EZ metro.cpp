@@ -7,7 +7,7 @@
 
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
-#define SCREEN_FPS  60
+#define SCREEN_FPS  10
 
 
 using namespace std;
@@ -16,7 +16,7 @@ using namespace std;
 SDL_Surface * screen = NULL;
 SDL_Event event;
 
-char * caption = "Wahaha!EZ metro~";
+char * caption = (char *)"Wahaha!EZ metro~";
 
 SDL_Surface * loadimage(char * file) {
 	SDL_Surface * loadedImage = NULL;
@@ -143,42 +143,39 @@ int play_game() {
 	SDL_Rect game_clip[game_case];
 
 	for(int i = 0; i < game_case; i++) {
-			game_pic[i] = NULL;
+		game_pic[i] = NULL;
 
-			int x, y, px, py;
-			char whichfile[100];
-			scanf("%s%d%d%d%d", &whichfile, &x, &y, &px, &py);
+		int x, y, px, py;
+		char whichfile[100];
+		scanf("%s%d%d%d%d", &whichfile, &x, &y, &px, &py);
 
-			game_pic[i] = loadimage(whichfile);
+		game_pic[i] = loadimage(whichfile);
 
-			// set clip of menu
-			game_clip[i].x = px;
-			game_clip[i].y = py;
-			game_clip[i].w = x;
-			game_clip[i].h = y;
+		// set clip of game
+		game_clip[i].x = px;
+		game_clip[i].y = py;
+		game_clip[i].w = x;
+		game_clip[i].h = y;
 
-			apply_surface(px, py, game_pic[i], screen);
-		}
+		apply_surface(px, py, game_pic[i], screen);
+	}
 
 	while(SDL_PollEvent(&event) && type == 0) {
 
 		if(event.type == SDL_QUIT) break;
-
-
 		else if(event.type == SDL_MOUSEBUTTONDOWN) {
 			if(event.button.button == SDL_BUTTON_LEFT) {
+
 
 			}
 		}
 		SDL_Flip(screen);
-
 		SDL_Delay(1000 / SCREEN_FPS);
 	}
 
 	for(int i = 0; i < game_case; i++) {
 		SDL_FreeSurface(game_pic[i]);
 	}
-
 	return type;
 }
 
